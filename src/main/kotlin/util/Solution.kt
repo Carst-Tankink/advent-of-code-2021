@@ -8,8 +8,7 @@ abstract class Solution<Input, SolutionType>(fileName: String) {
         .getResource(fileName)
         .readText()
         .lines()
-        .map { parse(it) }
-        .mapNotNull { it }
+        .mapNotNull { parse(it) }
 
     abstract fun parse(line: String): Input?
     abstract fun List<Input>.solve1(): SolutionType

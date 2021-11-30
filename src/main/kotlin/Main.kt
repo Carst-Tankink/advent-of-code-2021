@@ -2,12 +2,12 @@ import day0.Day0Placeholder
 import util.Solution
 
 fun main(args: Array<String>) {
-    val day = "0"
+    val day = 0
 
     solveDay(day) { s -> Day0Placeholder(s) }
 }
 
-private fun <I, S> solveDay(day: String, constructor: (String) -> Solution<I, S>) {
+private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {
     val dayPrefix = "/day$day/"
     val sample = constructor("${dayPrefix}sample")
     val input = constructor("${dayPrefix}input")

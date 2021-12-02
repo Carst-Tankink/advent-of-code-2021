@@ -1,10 +1,10 @@
-import day1.SonarSweep
+import day2.Dive
 import util.Solution
 
 fun main(args: Array<String>) {
-    val day = 1
+    val day = 2
 
-    solveDay(day) { s -> SonarSweep(s) }
+    solveDay(day) { s -> Dive(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

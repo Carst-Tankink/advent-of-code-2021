@@ -1,10 +1,10 @@
-import day2.Dive
+import day3.BinaryDiagnostic
 import util.Solution
 
 fun main(args: Array<String>) {
-    val day = 2
+    val day = 3
 
-    solveDay(day) { s -> Dive(s) }
+    solveDay(day) { s -> BinaryDiagnostic(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

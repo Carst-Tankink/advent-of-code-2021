@@ -1,12 +1,13 @@
 package day3
 
+import util.Helpers
 import util.Solution
 
 class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
     override fun parse(line: String): List<Int> = line.map { it.code - 48 }
 
     override fun List<List<Int>>.solve1(): Long {
-        val mostSignificantBits = transpose(this)
+        val mostSignificantBits = Helpers.transpose(this)
             .map {
                 if (it.sum() >= it.size / 2) 1 else 0
             }
@@ -39,10 +40,7 @@ class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
 
     }
 
-    private fun <T> transpose(input: List<List<T>>): List<List<T>> {
-        return if (input.any { it.isEmpty() }) emptyList() else
-            listOf(input.map { it[0] }) + transpose(input.map { it.drop(1) })
-    }
+
 
     private fun toDecimal(bits: List<Int>): Long {
         tailrec fun rec(acc: Long, power: Long, remaining: List<Int>): Long {

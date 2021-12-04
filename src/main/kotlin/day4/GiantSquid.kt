@@ -20,24 +20,39 @@ class GiantSquid(fileName: String) : Solution<List<Int>, Long>(fileName) {
         }
     }
 
+    tailrec fun play(numbersDrawn: List<Int>, numbersToGo: List<Int>, remainingBoards: List<Board>): Pair<List<Int>, Board> {
+        val winningBoard = remainingBoards.find { it.wins(numbersDrawn) }
+        return if (winningBoard != null) Pair(numbersDrawn, winningBoard)
+        else play(listOf(numbersToGo[0]) + numbersDrawn, numbersToGo.drop(1), remainingBoards)
+    }
     override fun List<List<Int>>.solve1(): Long {
-
         val numbersCalled = this[0]
-        val boards: List<Board> = makeBoard(this.drop(2))
+        val boards: List<Board> = makeBoards(this.drop(2))
+        val (numbers, winningBoard) = play(emptyList(), numbersCalled, boards)
+        return scoreBoard(winningBoard, numbers)
+    }
 
-        tailrec fun play(numbersDrawn: List<Int>, numbersToGo: List<Int>): Pair<List<Int>, Board> {
-            val winningBoard = boards.find { it.wins(numbersDrawn) }
-            return if (winningBoard != null) Pair(numbersDrawn, winningBoard)
-            else play(listOf(numbersToGo[0]) + numbersDrawn, numbersToGo.drop(1))
+    override fun List<List<Int>>.solve2(): Long {
+        tailrec fun playUntilLast(remaining: List<Board>, drawn: List<Int>, numbersToGo: List<Int>): Pair<List<Int>, Board>  {
+            return if (remaining.size == 1) play(drawn, numbersToGo, remaining) else {
+                val (numbersDrawn, winningBoard) = play(drawn, numbersToGo, remaining)
+                playUntilLast(remaining - winningBoard, numbersDrawn, numbersToGo - numbersDrawn)
+            }
         }
 
-        val (numbers, winningBoard) = play(emptyList(), numbersCalled)
-        val boardScore = winningBoard.rows.sumOf { row -> row.filterNot { numbers.contains(it) }.sum() }
+        val boards: List<Board> = makeBoards(this.drop(2))
 
+        val (numbers, final) = playUntilLast(boards, emptyList(), this[0])
+
+        return scoreBoard(final, numbers)
+    }
+
+    private fun scoreBoard(winningBoard: Board, numbers: List<Int>): Long {
+        val boardScore = winningBoard.rows.sumOf { row -> row.filterNot { numbers.contains(it) }.sum() }
         return boardScore.toLong() * numbers[0]
     }
 
-    private fun makeBoard(lines: List<List<Int>>): List<Board> {
+    private fun makeBoards(lines: List<List<Int>>): List<Board> {
         tailrec fun build(boards: List<Board>, currentBoard: List<List<Int>>, remaining: List<List<Int>>): List<Board> {
             return if (remaining.isEmpty()) boards + Board(currentBoard) else {
                 val next = remaining[0]
@@ -47,9 +62,5 @@ class GiantSquid(fileName: String) : Solution<List<Int>, Long>(fileName) {
         }
 
         return build(emptyList(), emptyList(), lines)
-    }
-
-    override fun List<List<Int>>.solve2(): Long {
-        TODO("Not yet implemented")
     }
 }

@@ -1,5 +1,11 @@
 package util
 
+data class Point(val x: Long, val y: Long) {
+    operator fun plus(other: Point): Point {
+        return Point(x + other.x, y + other.y)
+    }
+}
+
 class Helpers {
     companion object {
         fun <T> transpose(input: List<List<T>>): List<List<T>> {

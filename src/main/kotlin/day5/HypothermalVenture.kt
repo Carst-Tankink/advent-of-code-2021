@@ -47,5 +47,4 @@ class HypothermalVenture(fileName: String) : Solution<Line, Long>(fileName) {
     override fun List<Line>.solve2(): Long {
         return overlap(emptySet(), this).count().toLong()
     }
-
 }

@@ -7,7 +7,14 @@ data class Line(val start: Point, val end: Point)
 
 class HypothermalVenture(fileName: String) : Solution<Line, Long>(fileName) {
     override fun parse(line: String): Line? {
-        TODO("Not yet implemented")
+        val points = line
+            .split("->")
+            .map {
+                val coords = it.trim().split(",").map { p -> p.toLong() }
+                Point(coords[0], coords[1])
+            }
+
+        return Line(points[0], points[1])
     }
 
     override fun List<Line>.solve1(): Long {

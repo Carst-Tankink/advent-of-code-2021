@@ -30,7 +30,7 @@ class HypothermalVenture(fileName: String) : Solution<Line, Long>(fileName) {
         return Line(points[0], points[1])
     }
 
-    tailrec fun overlap(points: Set<Point>, remaining: List<Line>): Set<Point> {
+    private tailrec fun overlap(points: Set<Point>, remaining: List<Line>): Set<Point> {
         return if (remaining.isEmpty()) points else {
             val head = remaining[0]
             val tail = remaining.drop(1)

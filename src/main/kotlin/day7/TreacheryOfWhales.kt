@@ -16,6 +16,14 @@ class TreacheryOfWhales(fileName: String) : Solution<List<Long>, Long>(fileName)
     }
 
     override fun List<List<Long>>.solve2(): Long {
-        TODO("Not yet implemented")
+        val input = this[0]
+        val stop = input.maxOrNull() ?: 0
+
+        return (0..stop).map { position ->
+            input.sumOf {
+                val moves = (it - position).absoluteValue
+                (1..moves).sum()
+            }
+        }.minOrNull() ?: -1
     }
 }

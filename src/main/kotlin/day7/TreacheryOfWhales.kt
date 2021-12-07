@@ -22,7 +22,7 @@ class TreacheryOfWhales(fileName: String) : Solution<List<Long>, Long>(fileName)
         return (0..stop).map { position ->
             input.sumOf {
                 val moves = (it - position).absoluteValue
-                (1..moves).sum()
+                (moves * (moves + 1)) / 2
             }
         }.minOrNull() ?: -1
     }

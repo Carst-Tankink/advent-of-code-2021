@@ -1,10 +1,10 @@
-import day5.HypothermalVenture
+import day7.TreacheryOfWhales
 import util.Solution
 
 fun main(args: Array<String>) {
-    val day = 5
+    val day = 7
 
-    solveDay(day) { s -> HypothermalVenture(s) }
+    solveDay(day) { s -> TreacheryOfWhales(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

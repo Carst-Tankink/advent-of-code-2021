@@ -12,5 +12,15 @@ class Helpers {
             return if (input.any { it.isEmpty() }) emptyList() else
                 listOf(input.map { it[0] }) + transpose(input.map { it.drop(1) })
         }
+
+        fun toDecimal(digits: List<Int>, base: Int): Long {
+            tailrec fun rec(acc: Long, power: Long, remaining: List<Int>): Long {
+                return if (remaining.isEmpty()) acc else {
+                    rec(acc + power * remaining[0], power * base, remaining.drop(1))
+                }
+            }
+
+            return rec(0, 1, digits.reversed())
+        }
     }
 }

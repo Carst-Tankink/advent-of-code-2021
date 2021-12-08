@@ -1,6 +1,7 @@
 package day3
 
 import util.Helpers
+import util.Helpers.Companion.toDecimal
 import util.Solution
 
 class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
@@ -12,7 +13,7 @@ class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
                 if (it.sum() >= it.size / 2) 1 else 0
             }
         val leastSignificantBits = mostSignificantBits.map { 1 - it }
-        return toDecimal(mostSignificantBits) * toDecimal(leastSignificantBits)
+        return toDecimal(mostSignificantBits, 2) * toDecimal(leastSignificantBits, 2)
     }
 
     override fun List<List<Int>>.solve2(): Long {
@@ -36,19 +37,7 @@ class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
         val oxygen = filterLists(start, true)
         val scrubber = filterLists(start, false)
 
-        return toDecimal(oxygen) * toDecimal(scrubber)
+        return toDecimal(oxygen, 2) * toDecimal(scrubber, 2)
 
-    }
-
-
-
-    private fun toDecimal(bits: List<Int>): Long {
-        tailrec fun rec(acc: Long, power: Long, remaining: List<Int>): Long {
-            return if (remaining.isEmpty()) acc else {
-                rec(acc + power * remaining[0], power * 2, remaining.drop(1))
-            }
-        }
-
-        return rec(0, 1, bits.reversed())
     }
 }

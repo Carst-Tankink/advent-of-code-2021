@@ -1,11 +1,12 @@
 package day3
 
 import util.Helpers
+import util.Helpers.Companion.intValue
 import util.Helpers.Companion.toDecimal
 import util.Solution
 
 class BinaryDiagnostic(fileName: String) : Solution<List<Int>, Long>(fileName) {
-    override fun parse(line: String): List<Int> = line.map { it.code - 48 }
+    override fun parse(line: String): List<Int> = line.map { it.intValue() }
 
     override fun List<List<Int>>.solve1(): Long {
         val mostSignificantBits = Helpers.transpose(this)

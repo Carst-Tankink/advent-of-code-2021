@@ -1,10 +1,10 @@
-import day8.SevenSegmentSearch
+import day9.SmokeBasin
 import util.Solution
 
 fun main() {
-    val day = 8
+    val day = 9
 
-    solveDay(day) { s -> SevenSegmentSearch(s) }
+    solveDay(day) { s -> SmokeBasin(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

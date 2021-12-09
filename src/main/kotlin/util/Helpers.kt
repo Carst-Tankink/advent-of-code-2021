@@ -4,6 +4,13 @@ data class Point(val x: Long, val y: Long) {
     operator fun plus(other: Point): Point {
         return Point(x + other.x, y + other.y)
     }
+
+    fun getNeighbours(): List<Point> = listOf(
+        Point(0, -1),
+        Point(1, 0),
+        Point(0, 1),
+        Point(-1, 0)
+    ).map { dir -> this + dir }
 }
 
 class Helpers {

@@ -1,10 +1,10 @@
-import day9.SmokeBasin
+import day10.SyntaxScoring
 import util.Solution
 
 fun main() {
-    val day = 9
+    val day = 10
 
-    solveDay(day) { s -> SmokeBasin(s) }
+    solveDay(day) { s -> SyntaxScoring(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

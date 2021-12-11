@@ -5,13 +5,21 @@ data class Point(val x: Long, val y: Long) {
         return Point(x + other.x, y + other.y)
     }
 
-    fun getNeighbours(): List<Point> = listOf(
-        Point(0, -1),
-        Point(1, 0),
-        Point(0, 1),
-        Point(-1, 0)
-    ).map { dir -> this + dir }
+    fun getNeighbours(cardinal: Boolean): List<Point> {
+        val nonCardinal = if (cardinal) emptyList() else listOf(
+            Point(-1, -1), Point(1, -1),
+            Point(-1, 1), Point(1, 1)
+        )
+        return (nonCardinal + listOf(
+            Point(0, -1),
+            Point(1, 0),
+            Point(0, 1),
+            Point(-1, 0)
+        )).map { dir -> this + dir }
+    }
 }
+
+typealias Grid<T> = Map<Point, T>
 
 class Helpers {
     companion object {
@@ -31,5 +39,17 @@ class Helpers {
 
             return rec(0, 1, digits.reversed())
         }
+
+        fun <T> List<List<T>>.toGrid(): Grid<T> {
+            return this.mapIndexed { y, line ->
+                line.mapIndexed { x, t ->
+                    Point(x.toLong(), y.toLong()) to t
+                }
+            }
+                .flatten()
+                .toMap()
+        }
     }
+
+
 }

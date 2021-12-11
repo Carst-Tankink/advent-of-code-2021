@@ -1,10 +1,10 @@
-import day10.SyntaxScoring
+import day11.DumboOctopus
 import util.Solution
 
 fun main() {
-    val day = 10
+    val day = 11
 
-    solveDay(day) { s -> SyntaxScoring(s) }
+    solveDay(day) { s -> DumboOctopus(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

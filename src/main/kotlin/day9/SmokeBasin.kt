@@ -1,6 +1,7 @@
 package day9
 
 import util.Helpers.Companion.intValue
+import util.Helpers.Companion.toGrid
 import util.Point
 import util.Solution
 
@@ -14,7 +15,7 @@ class SmokeBasin(fileName: String) : Solution<List<Int>, Long>(fileName) {
 
     override fun List<List<Int>>.solve2(): Long {
         tailrec fun createBasin(basin: Set<Point>): Set<Point> {
-            val neighbours = basin.flatMap { it.getNeighbours() }
+            val neighbours = basin.flatMap { it.getNeighbours(cardinal = true) }
                 .filterNot { it in basin }
                 .filterNot { (heightMap[it] ?: 9) == 9 }
 
@@ -41,7 +42,7 @@ class SmokeBasin(fileName: String) : Solution<List<Int>, Long>(fileName) {
         return if (left.isEmpty()) risks else {
             val next = left[0]
             val localHeight = heightMap[next]!!
-            val neighbourHeights = next.getNeighbours()
+            val neighbourHeights = next.getNeighbours(cardinal = true)
                 .mapNotNull { heightMap[it] }
             val lowPoint = if (neighbourHeights.all { it > localHeight }) setOf(next) else emptySet()
             lowPoints(risks + lowPoint, left.drop(1))
@@ -49,7 +50,5 @@ class SmokeBasin(fileName: String) : Solution<List<Int>, Long>(fileName) {
     }
 
     private fun createHeightMap(): Map<Point, Int> =
-        data.mapIndexed { y, line ->
-            line.mapIndexed() { x, h -> Point(x.toLong(), y.toLong()) to h }
-        }.flatten().toMap()
+        data.toGrid()
 }

@@ -1,10 +1,10 @@
-import day11.DumboOctopus
+import day12.PassagePathing
 import util.Solution
 
 fun main() {
-    val day = 11
+    val day = 12
 
-    solveDay(day) { s -> DumboOctopus(s) }
+    solveDay(day) { s -> PassagePathing(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

@@ -9,19 +9,17 @@ class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fi
     }
 
     override fun List<Pair<String, String>>.solve1(): Long {
-        val graph: Map<String, List<String>> = this.groupBy({ it.first }) { it.second }
+        val extraEdges = this.map { Pair(it.second, it.first) }
+        val graph: Map<String, List<String>> = (this + extraEdges).groupBy({ it.first }) { it.second }
 
-        fun findPaths(node: String): List<List<String>> {
-            return if (node == "end") listOf(listOf(node)) else {
-                val neighbours = graph[node] ?: emptyList()
-                val p = neighbours.flatMap {
-                    findPaths(it).map { p -> listOf(node) + p }
-                }
-                p
-            }
+        fun findPaths(node: String, visited: Set<String>): List<List<String>> {
+            return if (node == "end") listOf(listOf(node)) else
+                graph[node]?.filter { it.all { c -> c.isUpperCase() || it !in visited } }
+                    ?.flatMap { findPaths(it, visited + node).map { p -> listOf(node) + p } }
+                    ?: emptyList()
         }
-        println(findPaths("start"))
-        TODO("Not yet implemented")
+
+        return findPaths("start", setOf()).size.toLong()
     }
 
     override fun List<Pair<String, String>>.solve2(): Long {

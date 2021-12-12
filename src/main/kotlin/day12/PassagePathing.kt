@@ -3,6 +3,11 @@ package day12
 import util.Solution
 
 class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fileName) {
+    private val graph: Map<String, List<String>> = let {
+        val returnEdges = data.map { Pair(it.second, it.first) }
+        (data + returnEdges).groupBy({ it.first }) { it.second }
+    }
+
     override fun parse(line: String): Pair<String, String> {
         val elements = line.split('-')
         return Pair(elements[0], elements[1])
@@ -13,10 +18,7 @@ class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fi
         return paths.size.toLong()
     }
 
-    private fun List<Pair<String, String>>.explorePaths(allowedSmall: String? = null): Set<List<String>> {
-        val returnEdges = this.map { Pair(it.second, it.first) }
-        val graph: Map<String, List<String>> = (this + returnEdges).groupBy({ it.first }) { it.second }
-
+    private fun explorePaths(allowedSmall: String? = null): Set<List<String>> {
         fun findPaths(node: String, visited: Set<String>, allowedSmall: String?): Set<List<String>> {
             return if (node == "end") setOf(listOf(node)) else {
                 val newVisited = if (node.all { it.isUpperCase() } || node == allowedSmall) visited else visited + node
@@ -37,6 +39,12 @@ class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fi
     }
 
     override fun List<Pair<String, String>>.solve2(): Long {
-        TODO("Not yet implemented")
+        val smallCaves = graph.keys
+            .filterNot { it in setOf("start", "end") }
+            .filter { it.all { it.isLowerCase()} }
+
+        val paths = smallCaves.fold(emptySet<List<String>>()) { acc, c -> acc + explorePaths(c) }
+        return paths.size.toLong()
     }
+
 }

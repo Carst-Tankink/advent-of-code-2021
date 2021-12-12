@@ -2,20 +2,19 @@ package day12
 
 import util.Solution
 
-class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fileName) {
-    private val graph: Map<String, List<String>> = let {
-        val returnEdges = data.map { Pair(it.second, it.first) }
-        (data + returnEdges).groupBy({ it.first }) { it.second }
-    }
-
+class PassagePathing(fileName: String) : Solution<Pair<String, String>, Int>(fileName) {
     override fun parse(line: String): Pair<String, String> {
         val elements = line.split('-')
         return Pair(elements[0], elements[1])
     }
 
-    override fun List<Pair<String, String>>.solve1(): Long {
-        val paths = explorePaths()
-        return paths.size.toLong()
+    private val graph: Map<String, List<String>> = let {
+        val returnEdges = data.map { Pair(it.second, it.first) }
+        (data + returnEdges).groupBy({ it.first }) { it.second }
+    }
+
+    override fun List<Pair<String, String>>.solve1(): Int {
+        return explorePaths().size
     }
 
     private fun explorePaths(allowedSmall: String? = null): Set<List<String>> {
@@ -38,13 +37,11 @@ class PassagePathing(fileName: String) : Solution<Pair<String, String>, Long>(fi
         return findPaths("start", setOf(), allowedSmall)
     }
 
-    override fun List<Pair<String, String>>.solve2(): Long {
-        val smallCaves = graph.keys
+    override fun List<Pair<String, String>>.solve2(): Int {
+        return graph.keys
             .filterNot { it in setOf("start", "end") }
-            .filter { it.all { it.isLowerCase()} }
-
-        val paths = smallCaves.fold(emptySet<List<String>>()) { acc, c -> acc + explorePaths(c) }
-        return paths.size.toLong()
+            .filter { it.all { c -> c.isLowerCase() } }
+            .fold<String, Set<List<String>>>(emptySet()) { acc, c -> acc + explorePaths(c) }.size
     }
 
 }

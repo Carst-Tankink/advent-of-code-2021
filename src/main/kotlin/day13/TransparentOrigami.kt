@@ -71,7 +71,7 @@ class TransparentOrigami(fileName: String) : Solution<Either<Point, FoldInstruct
     private fun printGrid(filledPoints: Set<Point>): String {
         return (0..(filledPoints.map { it.y }.maxOrNull() ?: 0)).map { y ->
             (0..(filledPoints.map { it.x }.maxOrNull() ?: 0)).map { x ->
-                if (Point(x, y) in filledPoints) '#' else ' '
+                if (Point(x, y) in filledPoints) "⬜️" else "◼️"
             }.joinToString("")
         }.joinToString("\n")
     }

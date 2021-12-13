@@ -1,5 +1,9 @@
 package util
 
+sealed class Either<L, R>(val left: L?, val right: R?)
+class Left<L, R>(value: L): Either<L, R>(left = value, right = null)
+class Right<L, R>(value: R): Either<L, R>(left = null, right = value)
+
 data class Point(val x: Long, val y: Long) {
     operator fun plus(other: Point): Point {
         return Point(x + other.x, y + other.y)

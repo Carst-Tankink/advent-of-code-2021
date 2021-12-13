@@ -1,10 +1,10 @@
-import day12.PassagePathing
+import day13.TransparentOrigami
 import util.Solution
 
 fun main() {
-    val day = 12
+    val day = 13
 
-    solveDay(day) { s -> PassagePathing(s) }
+    solveDay(day) { s -> TransparentOrigami(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

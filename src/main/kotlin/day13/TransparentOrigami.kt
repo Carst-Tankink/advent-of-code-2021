@@ -42,8 +42,7 @@ class TransparentOrigami(fileName: String) : Solution<Either<Point, FoldInstruct
                 }
             }
 
-        val result = (beforeLine + folded).toSet()
-        return result
+        return (beforeLine + folded).toSet()
     }
 
     override fun List<Either<Point, FoldInstruction>>.solve1(): Int {

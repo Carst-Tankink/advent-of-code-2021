@@ -27,7 +27,7 @@ class TransparentOrigami(fileName: String) : Solution<Either<Point, FoldInstruct
         }
     }
 
-    private fun foldPoints(points: Set<Point>, instruction: FoldInstruction): Set<Point> {
+    private fun foldSheet(points: Set<Point>, instruction: FoldInstruction): Set<Point> {
         val pointSelector =
             { p: Point -> if (instruction.direction == HORIZONTAL) p.y else p.x }
 
@@ -53,19 +53,17 @@ class TransparentOrigami(fileName: String) : Solution<Either<Point, FoldInstruct
 
         val instructions = this.mapNotNull { it.right }
 
-        return foldPoints(points, instructions[0]).size
+        return foldSheet(points, instructions[0]).size
     }
 
     override fun List<Either<Point, FoldInstruction>>.solve2(): Int {
-        val points = this
+        val sheet = this
         .mapNotNull { it.left }
         .toSet()
 
-        val instructions = this.mapNotNull { it.right }
-        val finalGrid = instructions.fold(points) { grid, i -> foldPoints(grid, i) }
-
-
-        println("Grid:\n${printGrid(finalGrid)}")
+        val folds = this.mapNotNull { it.right }
+        val folded = folds.fold(sheet) { s, i -> foldSheet(s, i) }
+        println("Grid:\n${printGrid(folded)}")
 
         return -1
     }

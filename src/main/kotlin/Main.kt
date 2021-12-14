@@ -1,10 +1,10 @@
-import day13.TransparentOrigami
+import day14.ExtendedPolymerization
 import util.Solution
 
 fun main() {
-    val day = 13
+    val day = 14
 
-    solveDay(day) { s -> TransparentOrigami(s) }
+    solveDay(day) { s -> ExtendedPolymerization(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

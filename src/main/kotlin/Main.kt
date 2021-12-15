@@ -1,10 +1,10 @@
-import day14.ExtendedPolymerization
+import day15.Chiton
 import util.Solution
 
 fun main() {
-    val day = 14
+    val day = 15
 
-    solveDay(day) { s -> ExtendedPolymerization(s) }
+    solveDay(day) { s -> Chiton(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

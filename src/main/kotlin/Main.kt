@@ -1,10 +1,9 @@
-import day15.Chiton
+import day16.PacketDecoder
 import util.Solution
 
 fun main() {
-    val day = 15
-
-    solveDay(day) { s -> Chiton(s) }
+    val day = 16
+    solveDay(day) { s -> PacketDecoder(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

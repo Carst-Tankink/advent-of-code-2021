@@ -24,6 +24,13 @@ data class Point(val x: Long, val y: Long) {
 }
 
 typealias Grid<T> = Map<Point, T>
+fun <T> Grid<T>.width(): Long {
+    return this.maxOf { it.key.x } + 1
+}
+
+fun <T> Grid<T>.height(): Long {
+    return this.maxOf { it.key.y  } + 1
+}
 
 class Helpers {
     companion object {

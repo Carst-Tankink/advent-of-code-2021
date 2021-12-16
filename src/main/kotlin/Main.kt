@@ -12,9 +12,17 @@ private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {
     val sample = constructor("${dayPrefix}sample")
     val input = constructor("${dayPrefix}input")
 
-    println("Sample star 1: ${sample.star1()}")
-    println("Input star 1: ${input.star1()}")
+    runSolution("Sample star 1: ") { sample.star1() }
+    runSolution("Input star 1: ") { input.star1() }
 
-    println("Sample star 2: ${sample.star2()}")
-    println("Input star 2: ${input.star2()}")
+    runSolution("Sample star 2: ") { sample.star2() }
+    runSolution("Input star 2: ") { input.star2() }
+
+}
+
+private fun <S> runSolution(message: String, function: () -> S) {
+    val before = System.currentTimeMillis()
+    val solution = function()
+    val after = System.currentTimeMillis()
+    println("$message$solution\nTime: ${after - before}ms")
 }

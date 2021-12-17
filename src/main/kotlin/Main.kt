@@ -1,9 +1,9 @@
-import day16.PacketDecoder
+import day17.TrickShot
 import util.Solution
 
 fun main() {
-    val day = 16
-    solveDay(day) { s -> PacketDecoder(s) }
+    val day = 17
+    solveDay(day) { s -> TrickShot(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

@@ -21,6 +21,8 @@ data class Point(val x: Long, val y: Long) {
             Point(-1, 0)
         )).map { dir -> this + dir }
     }
+
+
 }
 
 typealias Grid<T> = Map<Point, T>

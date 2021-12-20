@@ -1,9 +1,9 @@
-import day17.TrickShot
+import day18.Snailfish
 import util.Solution
 
 fun main() {
-    val day = 17
-    solveDay(day) { s -> TrickShot(s) }
+    val day = 18
+    solveDay(day) { s -> Snailfish(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

@@ -22,7 +22,7 @@ sealed interface Crumb
 data class LeftCrumb(val toRight: SnailFishNumber) : Crumb
 data class RightCrumb(val toLeft: SnailFishNumber) : Crumb
 
-data class Zipper(val number: SnailFishNumber, val directions: List<Crumb>) {
+data class Zipper(val number: SnailFishNumber, val directions: List<Crumb> = emptyList()) {
     fun left(): Zipper? {
         return when (number) {
             is PairNumber -> Zipper(number.left, listOf(LeftCrumb(number.right)) + directions)
@@ -65,7 +65,6 @@ data class Zipper(val number: SnailFishNumber, val directions: List<Crumb>) {
         }
     }
 
-
     fun toNumber(): SnailFishNumber {
         return root().number
     }
@@ -98,85 +97,121 @@ class Snailfish(fileName: String) : Solution<SnailFishNumber, Int>(fileName) {
     }
 
     override fun List<SnailFishNumber>.solve1(): Int {
-        println("Parsed tree: ${this[0]}")
-        TODO("Not yet implemented")
+        val finalSum = this.drop(1).fold(this[0]) { acc, snailFishNumber -> add(acc, snailFishNumber) }
+
+        return magnitude(finalSum)
     }
 
     override fun List<SnailFishNumber>.solve2(): Int {
-        TODO("Not yet implemented")
-    }
-
-    fun add(left: SnailFishNumber, right: SnailFishNumber): SnailFishNumber {
-        val addedNumber = PairNumber(left, right)
-        // TODO: Reduction
-        return addedNumber
-    }
-
-
-    fun explode(s: SnailFishNumber): SnailFishNumber {
-        tailrec fun findExplodingPair(current: List<Zipper>): Zipper {
-            val head = current[0]
-            return if (head.directions.size == 4 && head.number is PairNumber) head else {
-                val tail = current.drop(1)
-                findExplodingPair(listOfNotNull(head.left(), head.right()) + tail)
-            }
+        val pairs: List<Pair<SnailFishNumber, SnailFishNumber>> = this.flatMap { n1 ->
+            this.filterNot { n2 -> n1 == n2 }
+                .map { n2 -> Pair(n1, n2) }
         }
 
-        fun addExplodedValue(receiver: Zipper, explodedValue: RegularNumber): Zipper {
-            val value = receiver.number as RegularNumber
-            return receiver.replaceWith(RegularNumber(value.value + explodedValue.value))
-        }
+        return pairs.maxOf { magnitude(add(it.first, it.second)) }
+}
 
-
-        val explodingPair = findExplodingPair(listOf(Zipper(s, emptyList())))
-        val leftReceiver = findLeftSibling(explodingPair)
-
-        val rightReceiver = findRightSibling(explodingPair)
-        println("Exploding $explodingPair into:\n$leftReceiver \n$rightReceiver")
-
-        val updatedLeft = if (leftReceiver == null) explodingPair else addExplodedValue(
-            leftReceiver,
-            explodingPair.left()!!.number as RegularNumber
-        )
-
-        val updatedRight = if (rightReceiver == null) updatedLeft else addExplodedValue(
-            updatedLeft.goto(rightReceiver.directions),
-            explodingPair.right()!!.number as RegularNumber
-        )
-
-        val finalValue = updatedRight.goto(explodingPair.directions).replaceWith(RegularNumber(0))
-        return finalValue.toNumber()
+private fun magnitude(number: SnailFishNumber): Int {
+    return when (number) {
+        is RegularNumber -> number.value
+        is PairNumber -> 3 * magnitude(number.left) + 2 * magnitude(number.right)
     }
+}
 
-
-    private fun findRightSibling(explodingPair: Zipper) =
-        findSibling(explodingPair, { it is RightCrumb }, { it.right()!! }) { it.left()!! }
-
-    private fun findLeftSibling(explodingPair: Zipper) =
-        findSibling(explodingPair, { it is LeftCrumb }, { it.left()!! }) { it.right()!! }
-
-
-    private tailrec fun findSibling(
-        focus: Zipper,
-        check: (Crumb) -> Boolean,
-        firstTurn: (Zipper) -> Zipper,
-        descendDirection: (Zipper) -> Zipper
-    ): Zipper? {
-        val above = focus.up()
+fun add(left: SnailFishNumber, right: SnailFishNumber): SnailFishNumber {
+    tailrec fun reduce(number: SnailFishNumber): SnailFishNumber {
+        val current = listOf(Zipper(number))
+        val exploding = findExplodingPair(current)
+        val splittable = findSplittable(current)
         return when {
-            (above == null) -> null
-            check(focus.directions[0]) -> findSibling(above, check, firstTurn, descendDirection)
-            else -> descendToBottom(firstTurn(above), descendDirection)
+            exploding != null -> reduce(explode(exploding))
+            splittable != null -> reduce(split(splittable))
+            else -> number
+        }
+    }
+    return reduce(PairNumber(left, right))
+}
+
+tailrec fun findExplodingPair(current: List<Zipper>): Zipper? {
+    return if (current.isEmpty()) null else {
+        val head = current[0]
+        if (head.directions.size == 4 && head.number is PairNumber) head else {
+            val tail = current.drop(1)
+            findExplodingPair(listOfNotNull(head.left(), head.right()) + tail)
         }
     }
 
-    private tailrec fun descendToBottom(node: Zipper, direction: (Zipper) -> Zipper): Zipper? {
-        return when (node.number) {
-            is RegularNumber -> node
-            is PairNumber -> descendToBottom(direction(node), direction)
-        }
+}
 
+fun explode(s: Zipper): SnailFishNumber {
+    fun addExplodedValue(receiver: Zipper, explodedValue: RegularNumber): Zipper {
+        val value = receiver.number as RegularNumber
+        return receiver.replaceWith(RegularNumber(value.value + explodedValue.value))
     }
+
+
+    val leftReceiver = findLeftSibling(s)
+    val rightReceiver = findRightSibling(s)
+
+    val updatedLeft = if (leftReceiver == null) s else addExplodedValue(
+        leftReceiver,
+        s.left()!!.number as RegularNumber
+    )
+
+    val updatedRight = if (rightReceiver == null) updatedLeft else addExplodedValue(
+        updatedLeft.goto(rightReceiver.directions),
+        s.right()!!.number as RegularNumber
+    )
+
+    val finalValue = updatedRight.goto(s.directions).replaceWith(RegularNumber(0))
+    return finalValue.toNumber()
+}
+
+
+private fun findRightSibling(explodingPair: Zipper) =
+    findSibling(explodingPair, { it is RightCrumb }, { it.right()!! }) { it.left()!! }
+
+private fun findLeftSibling(explodingPair: Zipper) =
+    findSibling(explodingPair, { it is LeftCrumb }, { it.left()!! }) { it.right()!! }
+
+
+private tailrec fun findSibling(
+    focus: Zipper,
+    check: (Crumb) -> Boolean,
+    firstTurn: (Zipper) -> Zipper,
+    descendDirection: (Zipper) -> Zipper
+): Zipper? {
+    val above = focus.up()
+    return when {
+        (above == null) -> null
+        check(focus.directions[0]) -> findSibling(above, check, firstTurn, descendDirection)
+        else -> descendToBottom(firstTurn(above), descendDirection)
+    }
+}
+
+private tailrec fun descendToBottom(node: Zipper, direction: (Zipper) -> Zipper): Zipper? {
+    return when (node.number) {
+        is RegularNumber -> node
+        is PairNumber -> descendToBottom(direction(node), direction)
+    }
+}
+
+private tailrec fun findSplittable(togo: List<Zipper>): Zipper? {
+    return if (togo.isEmpty()) null else {
+        val focus = togo[0]
+        return if (focus.number is RegularNumber && focus.number.value >= 10) focus else {
+            findSplittable(listOfNotNull(focus.left(), focus.right()) + togo.drop(1))
+        }
+    }
+}
+
+fun split(number: Zipper): SnailFishNumber {
+    val value = (number.number as RegularNumber).value
+    val leftValue = value / 2
+    val rightValue = (value + 1) / 2
+    return number.replaceWith(PairNumber(RegularNumber(leftValue), RegularNumber(rightValue))).toNumber()
+
+}
 }
 
 

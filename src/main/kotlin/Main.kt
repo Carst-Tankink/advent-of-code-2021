@@ -1,9 +1,9 @@
-import day21.DiracDie
+import day20.TrenchMap
 import util.Solution
 
 fun main() {
-    val day = 21
-    solveDay(day) { s -> DiracDie(s) }
+    val day = 20
+    solveDay(day) { s -> TrenchMap(s) }
 }
 
 private fun <I, S> solveDay(day: Int, constructor: (String) -> Solution<I, S>) {

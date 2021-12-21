@@ -3,6 +3,7 @@ package day13
 import day13.FoldInstruction.FoldDirection.HORIZONTAL
 import day13.FoldInstruction.FoldDirection.VERTICAL
 import util.*
+import util.Helpers.Companion.printGrid
 
 data class FoldInstruction(val coord: Int, val direction: FoldDirection) {
     enum class FoldDirection {
@@ -67,11 +68,5 @@ class TransparentOrigami(fileName: String) : Solution<Either<Point, FoldInstruct
         return -1
     }
 
-    private fun printGrid(filledPoints: Set<Point>): String {
-        return (0..(filledPoints.map { it.y }.maxOrNull() ?: 0)).map { y ->
-            (0..(filledPoints.map { it.x }.maxOrNull() ?: 0)).map { x ->
-                if (Point(x, y) in filledPoints) "⬜️" else "◼️"
-            }.joinToString("")
-        }.joinToString("\n")
-    }
+
 }
